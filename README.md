@@ -1,0 +1,2 @@
+# Starlingx_Telco_Edge_Stack
+TELCO  EDGE STACK ON STARLINGX_KUBERNETES
