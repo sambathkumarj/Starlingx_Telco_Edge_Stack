@@ -103,21 +103,21 @@ In manifests, type = NodePort
 
 **5G NR GNB :**
 Check whether the Gnb is connected to the same network as the Core network and reachable to all the microservices running the K8S cluster by adding a default route to the Gnb machine. 
-      1. Verify Network Connectivity: Ensure that the Gnb machine is connected to the same network as the Core network. You can do this by checking the network configuration on the Gnb machine and comparing it with the network configuration of the Core network. Ensure that both networks have compatible IP address ranges and subnet masks.
-      2. Check Default Gateway: Verify that the Gnb machine has a default gateway configured. The default gateway is the IP address of the router or gateway device that connects the Gnb machine to the wider network, including the Core network. You can check the network configuration on the Gnb machine to confirm the presence of a default gateway.(Example :- sudo ip r add 0.0.0.0/0 via <Core static ip>) 
-      3. Validate Reachability: To ensure that the Gnb machine is reachable by all the microservices running on the K8S cluster, you can perform the following steps:
+1. Verify Network Connectivity: Ensure that the Gnb machine is connected to the same network as the Core network. You can do this by checking the network configuration on the Gnb machine and comparing it with the network configuration of the Core network. Ensure that both networks have compatible IP address ranges and subnet masks.
+2. Check Default Gateway: Verify that the Gnb machine has a default gateway configured. The default gateway is the IP address of the router or gateway device that connects the Gnb machine to the wider network, including the Core network. You can check the network configuration on the Gnb machine to confirm the presence of a default gateway.(Example :- sudo ip r add 0.0.0.0/0 via <Core static ip>) 
+3. Validate Reachability: To ensure that the Gnb machine is reachable by all the microservices running on the K8S cluster, you can perform the following steps:
       
-      a. From a microservice within the K8S cluster, attempt to ping the IP address of the Gnb machine. If the ping is successful, it indicates that the Gnb machine is reachable from within the K8S cluster.
+a. From a microservice within the K8S cluster, attempt to ping the IP address of the Gnb machine. If the ping is successful, it indicates that the Gnb machine is reachable from within the K8S cluster.
       
-      b. If the Gnb machine has a firewall enabled, ensure that it allows incoming connections from the IP addresses or subnets used by the K8S cluster. Check the firewall configuration on the Gnb machine and make any necessary adjustments to allow incoming connections.
+b. If the Gnb machine has a firewall enabled, ensure that it allows incoming connections from the IP addresses or subnets used by the K8S cluster. Check the firewall configuration on the Gnb machine and make any necessary adjustments to allow incoming connections.
       
-       c. Verify Routing: Check the routing tables on the Gnb machine to ensure that it has a route to reach the IP addresses used by the K8S cluster. This includes the IP addresses assigned to the microservices running on the cluster. If the Gnb machine does not have a route to the K8S cluster's IP addresses, you may need to add a specific route or adjust the default route configuration on the Gnb machine.
-    • Switch to the root user to edit the configuration files of root/lte.../config/enb.cfg by adding the AMF IP address and Changing the gtpu address of Gnb IP address (static ip where we set) , save, and exiting.
-    • Check whether the Gnb and Core are connected by Cable free UI, where Gnap is connected to the service IP of AMF or the Log file generated in gnb0.log file(path nano /tmp/gnb0.log). If Gnb is connected, then check the (UE device to which the sim is attached) Cable free  outdoor CPE has connected to the Gnb in Cable-free UI.
-    • Check whether the CPE(UE) has IP address .UPF (Core network – NFV) will assign an IP address for CPE(UE) by tunnel created in UPF. 
-      1 . The CPE/UE can have an IP address assigned to it by the UPF (User Plane Function) in the core network, which is a component of the 5G network architecture based on NFV (Network Function Virtualization).
-      2 . When a CPE/UE connects to the network, it establishes a communication link with the UPF via a tunnel. This tunnel is created between the CPE/UE and the UPF to facilitate the transmission of data packets.
-      3. Once the tunnel is established, the CPE/UE can communicate with the core network and other external networks using the assigned IP address. The UPF acts as a gateway for the CPE/UE, forwarding the data packets between the CPE/UE and the appropriate network destinations.
+c. Verify Routing: Check the routing tables on the Gnb machine to ensure that it has a route to reach the IP addresses used by the K8S cluster. This includes the IP addresses assigned to the microservices running on the cluster. If the Gnb machine does not have a route to the K8S cluster's IP addresses, you may need to add a specific route or adjust the default route configuration on the Gnb machine.
+• Switch to the root user to edit the configuration files of root/lte.../config/enb.cfg by adding the AMF IP address and Changing the gtpu address of Gnb IP address (static ip where we set) , save, and exiting.
+• Check whether the Gnb and Core are connected by Cable free UI, where Gnap is connected to the service IP of AMF or the Log file generated in gnb0.log file(path nano /tmp/gnb0.log). If Gnb is connected, then check the (UE device to which the sim is attached) Cable free  outdoor CPE has connected to the Gnb in Cable-free UI.
+• Check whether the CPE(UE) has IP address .UPF (Core network – NFV) will assign an IP address for CPE(UE) by tunnel created in UPF. 
+1 . The CPE/UE can have an IP address assigned to it by the UPF (User Plane Function) in the core network, which is a component of the 5G network architecture based on NFV (Network Function Virtualization).
+2 . When a CPE/UE connects to the network, it establishes a communication link with the UPF via a tunnel. This tunnel is created between the CPE/UE and the UPF to facilitate the transmission of data packets.
+3. Once the tunnel is established, the CPE/UE can communicate with the core network and other external networks using the assigned IP address. The UPF acts as a gateway for the CPE/UE, forwarding the data packets between the CPE/UE and the appropriate network destinations.
 
 
       
