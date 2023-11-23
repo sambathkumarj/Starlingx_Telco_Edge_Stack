@@ -1,0 +1,49 @@
+export CONTROLLER0_OAM_CIDR=10.X.22.102/24
+export DEFAULT_OAM_GATEWAY=10.X.22.254
+sudo ip address add $CONTROLLER0_OAM_CIDR dev eno2
+sudo ip link set up dev eno2
+sudo ip route add default via $DEFAULT_OAM_GATEWAY dev eno2
+
+sudo vi /etc/resolv.conf
+nameserver 1.1.1.1
+sysadmin@localhost:~$ sudo ntpdate pool.ntp.org
+
+sysadmin@localhost:~$ cat <<EOF > localhost.yml
+system_mode: simplex
+dns_servers:
+- 1.1.1.1
+external_oam_subnet: 10.X.22.0/24
+external_oam_gateway_address: 10.X.22.254
+external_oam_floating_address: 10.X.22.10X
+admin_username: admin
+admin_password: <yourwebadminpassword>
+ansible_become_pass: <sysadminaccountpassword>
+EOF
+
+sysadmin@localhost:~$ ansible-playbook /usr/share/ansible/stx-ansible/playbooks/bootstrap.yml
+
+sysadmin@localhost:~$ source /etc/platform/openrc
+[sysadmin@localhost ~(keystone_admin)]$ OAM_IF=eno2
+[sysadmin@localhost ~(keystone_admin)]$ system host-if-modify controller-0 $OAM_IF -c platform
+[sysadmin@localhost ~(keystone_admin)]$ system interface-network-assign controller-0 $OAM_IF oam
+[sysadmin@localhost ~(keystone_admin)]$ system ntp-modify ntpservers=0.pool.ntp.org,1.pool.ntp.org
+
+system host-label-assign controller-0 openstack-control-plane=enabled
+system host-label-assign controller-0 openstack-compute-node=enabled
+system host-label-assign controller-0 openvswitch=enabled
+
+system host-cpu-modify -f platform -p0 6 controller-0
+
+system host-fs-list controller-0
+system host-lvg-list controller-0
+system host-fs-modify controller-0 docker=60
+system modify --vswitch_type none
+
+export NODE=controller-0
+[sysadmin@localhost ~(keystone_admin)]$ system host-fs-add ${NODE} instances=50         
+
+system storage-backend-add ceph --confirmed
+system host-disk-list controller-0
+system host-stor-add controller-0 osd <disk-uuid>
+system host-stor-list controller-0
+~(keystone_admin)$ system host-unlock controller-0
